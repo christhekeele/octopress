@@ -1,7 +1,7 @@
 require 'thor'
 require 'pathname'
 require 'octopress'
-Dir.glob("octopress/commands/**/*.rb").each{ |file| require file }
+require 'octopress/commands/generate'
 
 module Octopress
   class Cli < Thor

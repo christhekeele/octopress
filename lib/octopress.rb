@@ -1,7 +1,6 @@
 require "octopress/configuration"
+require "octopress/configurations/core"
 require "octopress/configurable"
-
-Dir.glob("octopress/configurations/**/*.rb").each{ |file| require file }
 
 module Octopress
   class << self
