@@ -1,5 +1,10 @@
-require "octopress/version"
+require "octopress/configuration"
+require "octopress/configurations/core"
+require "octopress/configurable"
 
 module Octopress
-  # Your code goes here...
+  include Configurable
+  configure_with CoreConfiguration
 end
+
+require "octopress/version"

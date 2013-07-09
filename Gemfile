@@ -14,3 +14,5 @@ gem 'rubypants', '~> 0.2.0'
 gem 'rb-fsevent', '~> 0.9'
 gem 'stringex', '~> 1.4.0'
 gem 'liquid', '~> 2.3.0'
+
+gem 'pry'
