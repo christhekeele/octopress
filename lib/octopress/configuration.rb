@@ -7,6 +7,21 @@ module Octopress
       yield(self) if block_given?
     end
 
+    def to_hash
+      unless self.instance_variables.empty?
+        Hash[
+          self.instance_variables.map do |instance_variable_name|
+            key = instance_variable_name.to_s.gsub('@', '').to_sym
+            value = self.instance_variable_get(instance_variable_name)
+            value = value.to_hash if value.is_a?(Configuration)
+            [key, value]
+          end
+        ]
+      else
+        nil
+      end
+    end
+
     def method_missing(setting, *args, &block)
       setter, getter = derive_setting_names(setting)
       create_accessors setter, getter

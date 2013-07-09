@@ -8,14 +8,17 @@ module Octopress
     include Thor::Actions
 
     class << self
-      attr_accessor :call_root, :bootfile, :source_root, :in_site
+      attr_accessor :source_root, :call_root, :destination_root
+      attr_accessor :bootfile, :in_site
     end
+
+    self.source_root = File.dirname(File.join '..', __FILE__)
 
   ####
   # Find a working directory
   ##
     self.call_root = Dir.pwd
-    self.source_root = loop do
+    self.destination_root = loop do
       bootfile = Dir.pwd + '/config/boot.rb'
       if File.exists?(bootfile) and File.read(bootfile).include?('Octopress.initialize!')
         self.in_site = true
@@ -38,7 +41,7 @@ module Octopress
     else
       desc 'new NAME', 'Create a new octopress site'
       def new(site_name='octopress')
-        puts self.class.call_root, self.class.in_site, self.class.source_root
+        directory 'templates/site', site_name
       end
     end
 

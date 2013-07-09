@@ -1,0 +1,2 @@
+Octopress.initialize! File.dirname(File.join '../..', __FILE__)
+require_relative './<%= site_name %>'

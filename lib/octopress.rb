@@ -15,3 +15,5 @@ module Octopress
 end
 
 require "octopress/version"
+
+require 'pry'; binding.pry
