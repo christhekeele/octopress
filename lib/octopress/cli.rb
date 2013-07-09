@@ -10,9 +10,15 @@ module Octopress
     class << self
       attr_accessor :source_root, :call_root, :destination_root
       attr_accessor :bootfile, :in_site
+      attr_accessor :site_name
     end
+    self.source_root = File.absolute_path(File.dirname __FILE__)
 
-    self.source_root = File.dirname(File.join '..', __FILE__)
+  no_commands do
+    def site_name
+      @site_name ||= self.class.site_name
+    end
+  end
 
   ####
   # Find a working directory
@@ -33,15 +39,23 @@ module Octopress
     Dir.chdir(self.call_root)
 
   ####
-  # Load an Octopress site and relevant tasks or enable site creator
+  # Load Octopress site
   ##
     if self.in_site
       require self.bootfile
+      self.site_name = File.basename(self.destination_root)
+    end
+
+  ####
+  # Configure tasks
+  ##
+    if self.in_site
       register Octopress::Commands::Generate, 'generate', 'generate NEW_CONTENT', 'Generate new content.'
     else
       desc 'new NAME', 'Create a new octopress site'
       def new(site_name='octopress')
-        directory 'templates/site', site_name
+        self.class.site_name = site_name
+        directory 'templates/site', site_name, site_name: site_name
       end
     end
 

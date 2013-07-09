@@ -1,2 +1,2 @@
 Octopress.initialize! File.dirname(File.join '../..', __FILE__)
-require_relative './<%= site_name %>'
+require_relative './<%= config[:site_name] %>'

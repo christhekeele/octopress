@@ -1,10 +1,26 @@
 require 'logger'
+require 'octopress/extensions/key_path'
 
 module Octopress
   class Configuration
 
-    def configure(&block)
-      yield(self) if block_given?
+    def self.from_hash(source_hash)
+      result = self.new
+      key_chains = source_hash.key_paths.to_key_chains
+      key_chains.each do |key_chain|
+        method_chain = key_chain.dup
+        actual_value = method_chain.pop
+        object = result
+        method_chain.each do |method_name|
+          object = object.send method_name
+        end
+        hash = source_hash
+        key_chain.each do |method_name|
+          hash = hash[method_name]
+        end
+        object.send :"#{actual_value}=", hash
+      end
+      result
     end
 
     def to_hash
@@ -22,6 +38,10 @@ module Octopress
       end
     end
 
+    def configure(&block)
+      yield(self) if block_given?
+    end
+
     def method_missing(setting, *args, &block)
       setter, getter = derive_setting_names(setting)
       create_accessors setter, getter
@@ -36,7 +56,7 @@ module Octopress
 
     def derive_setting_names(setting_name)
       if setter? setting_name
-        [ setting_name, :"#{setting_name.to_s.scan(/.+[^=]/).first}" ]
+        [ setting_name, :"#{setting_name.to_s.gsub('=','')}" ]
       else
         [:"#{setting_name}=", setting_name ]
       end
